@@ -1,0 +1,172 @@
+@import "tailwindcss";
+
+/* Custom theme untuk HR Solutions */
+@theme {
+    --color-brand: #2B5BA8;
+    --color-brand-light: #E8EEF8;
+    --color-brand-dark: #1E3F75;
+    --color-brand-50: #F0F4FA;
+    --color-brand-100: #D9E4F5;
+    --color-brand-200: #B3C9EB;
+    --color-brand-300: #8DADE0;
+    --color-brand-400: #6792D6;
+    --color-brand-500: #2B5BA8;
+    --color-brand-600: #234A8A;
+    --color-brand-700: #1B396B;
+    --color-brand-800: #14284D;
+    --color-brand-900: #0C172E;
+
+    --color-success: #16A34A;
+    --color-warning: #F59E0B;
+    --color-danger: #DC2626;
+    --color-info: #0EA5E9;
+
+    /* Font stack */
+    --font-family-sans: 'Inter', system-ui, -apple-system, sans-serif;
+}
+
+/* ============================================================
+   Base Styles
+   ============================================================ */
+body {
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    -webkit-font-smoothing: antialiased;
+}
+
+/* ============================================================
+   Sidebar — complex states + transitions + pseudo-elements
+   ============================================================ */
+.hr-sidebar {
+    background: linear-gradient(180deg, #0C172E 0%, #14284D 100%);
+    box-shadow: 4px 0 24px rgba(0,0,0,0.15);
+    transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1), transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+@media (max-width: 1023px) {
+    .hr-sidebar {
+        transform: translateX(-100%);
+        width: 260px !important;
+    }
+    .hr-sidebar.is-open {
+        transform: translateX(0);
+    }
+    .hr-sidebar.is-collapsed {
+        transform: translateX(-100%);
+    }
+}
+
+.sidebar-logo-icon {
+    background: linear-gradient(135deg, #2B5BA8, #6792D6);
+    box-shadow: 0 4px 12px rgba(43,91,168,0.3);
+}
+
+.sidebar-nav {
+    scrollbar-width: thin;
+    scrollbar-color: rgba(255,255,255,0.1) transparent;
+}
+
+.sidebar-item.active::before {
+    content: '';
+    position: absolute;
+    left: 0; top: 50%;
+    transform: translateY(-50%);
+    width: 3px; height: 20px;
+    background: #2B5BA8;
+    border-radius: 0 3px 3px 0;
+}
+
+/* ============================================================
+   Main Content Area
+   ============================================================ */
+.hr-main {
+    transition: margin-left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+@media (max-width: 1023px) {
+    .hr-main {
+        margin-left: 0 !important;
+    }
+}
+
+/* ============================================================
+   Navbar — glassmorphism
+   ============================================================ */
+.hr-navbar {
+    background: rgba(255,255,255,0.85);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+}
+
+/* ============================================================
+   Profile avatar gradient
+   ============================================================ */
+.profile-avatar {
+    background: linear-gradient(135deg, #2B5BA8, #6792D6);
+}
+
+/* ============================================================
+   Welcome banner gradient
+   ============================================================ */
+.welcome-banner {
+    background: linear-gradient(135deg, #0C172E, #1E3F75, #2B5BA8);
+}
+
+/* ============================================================
+   Decorative circle on banner
+   ============================================================ */
+.banner-circle-1 {
+    position: absolute;
+    top: -40px; right: -20px;
+    width: 200px; height: 200px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.04);
+}
+.banner-circle-2 {
+    position: absolute;
+    bottom: -60px; right: 80px;
+    width: 150px; height: 150px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.03);
+}
+
+/* ============================================================
+   Mobile sidebar overlay
+   ============================================================ */
+@media (max-width: 1023px) {
+    .sidebar-overlay.is-open {
+        display: block;
+    }
+}
+
+/* ============================================================
+   Form focus ring (brand color)
+   ============================================================ */
+.form-input:focus {
+    border-color: #2B5BA8;
+    box-shadow: 0 0 0 3px rgba(43,91,168,0.1);
+}
+
+/* ============================================================
+   Button hover lift effect
+   ============================================================ */
+.btn-lift:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+/* ============================================================
+   Stat card hover effect
+   ============================================================ */
+.stat-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(0,0,0,0.08);
+}
+
+/* ============================================================
+   Custom Scrollbar
+   ============================================================ */
+@layer utilities {
+    .scrollbar-thin {
+        scrollbar-width: thin;
+    }
+}
