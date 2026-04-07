@@ -18,105 +18,113 @@ class SampleTenantSeeder extends Seeder
     {
         $plan = Plan::where('slug', 'enterprise')->first();
 
+        if (!$plan) {
+            $this->command->warn('Enterprise plan not found. Skipping SampleTenantSeeder.');
+            return;
+        }
+
         // ============================================================
         // Sample tenant: PT Spandiv Global
         // ============================================================
-        $tenant = Tenant::create([
-            'plan_id'   => $plan->id,
-            'name'      => 'PT Spandiv Global',
-            'slug'      => 'spandiv',
-            'subdomain' => 'spandiv',
-            'status'    => 'active',
-        ]);
+        $tenant = Tenant::firstOrCreate(
+            ['subdomain' => 'spandiv'],
+            [
+                'plan_id' => $plan->id,
+                'name'    => 'PT Spandiv Global',
+                'slug'    => 'spandiv',
+                'status'  => 'active',
+            ]
+        );
 
         // Tenant Settings
-        TenantSetting::create([
-            'tenant_id'       => $tenant->id,
-            'brand_color'     => '#2B5BA8',
-            'timezone'        => 'Asia/Jakarta',
-            'currency'        => 'IDR',
-            'language'        => 'id',
-            'payroll_cutoff_day' => 25,
-            'company_address' => 'Jl. HR Rasuna Said Kav. 62, Jakarta Selatan',
-            'company_phone'   => '021-5551234',
-            'company_email'   => 'hr@spandiv.com',
-        ]);
+        TenantSetting::firstOrCreate(
+            ['tenant_id' => $tenant->id],
+            [
+                'brand_color'       => '#2B5BA8',
+                'timezone'          => 'Asia/Jakarta',
+                'currency'          => 'IDR',
+                'language'          => 'id',
+                'payroll_cutoff_day' => 25,
+                'company_address'   => 'Jl. HR Rasuna Said Kav. 62, Jakarta Selatan',
+                'company_phone'     => '021-5551234',
+                'company_email'     => 'hr@spandiv.com',
+            ]
+        );
 
         // Subscription
-        TenantSubscription::create([
-            'tenant_id'      => $tenant->id,
-            'plan_id'        => $plan->id,
-            'starts_at'      => now(),
-            'ends_at'        => now()->addYear(),
-            'billing_cycle'  => 'yearly',
-            'payment_status' => 'paid',
-            'status'         => 'active',
-            'amount_paid'    => $plan->price_yearly,
-        ]);
+        TenantSubscription::firstOrCreate(
+            ['tenant_id' => $tenant->id, 'status' => 'active'],
+            [
+                'plan_id'        => $plan->id,
+                'starts_at'      => now(),
+                'ends_at'        => now()->addYear(),
+                'billing_cycle'  => 'yearly',
+                'payment_status' => 'paid',
+                'amount_paid'    => $plan->price_yearly,
+            ]
+        );
 
         // ============================================================
         // Company Owner user
         // ============================================================
-        $owner = User::create([
-            'tenant_id' => $tenant->id,
-            'name'      => 'Budi Santoso',
-            'email'     => 'owner@spandiv.com',
-            'password'  => Hash::make('password'),
-            'guard'     => 'web',
-            'is_active' => true,
-            'email_verified_at' => now(),
-        ]);
-        $owner->assignRole('company_owner');
+        $owner = User::firstOrCreate(
+            ['email' => 'owner@spandiv.com'],
+            [
+                'tenant_id' => $tenant->id,
+                'name'      => 'Budi Santoso',
+                'password'  => Hash::make('password'),
+                'guard'     => 'web',
+                'is_active' => true,
+                'email_verified_at' => now(),
+            ]
+        );
+        if (!$owner->hasRole('company_owner')) {
+            $owner->assignRole('company_owner');
+        }
 
         // HR Admin user
-        $hrAdmin = User::create([
-            'tenant_id' => $tenant->id,
-            'name'      => 'Sari Dewi',
-            'email'     => 'hr@spandiv.com',
-            'password'  => Hash::make('password'),
-            'guard'     => 'web',
-            'is_active' => true,
-            'email_verified_at' => now(),
-        ]);
-        $hrAdmin->assignRole('hr_admin');
+        $hrAdmin = User::firstOrCreate(
+            ['email' => 'hr@spandiv.com'],
+            [
+                'tenant_id' => $tenant->id,
+                'name'      => 'Sari Dewi',
+                'password'  => Hash::make('password'),
+                'guard'     => 'web',
+                'is_active' => true,
+                'email_verified_at' => now(),
+            ]
+        );
+        if (!$hrAdmin->hasRole('hr_admin')) {
+            $hrAdmin->assignRole('hr_admin');
+        }
 
         // ============================================================
         // Sample Departments
         // ============================================================
-        $engineering = Department::create([
-            'tenant_id' => $tenant->id,
-            'name'      => 'Engineering',
-            'code'      => 'ENG',
-            'is_active' => true,
-        ]);
+        $engineering = Department::firstOrCreate(
+            ['tenant_id' => $tenant->id, 'code' => 'ENG'],
+            ['name' => 'Engineering', 'is_active' => true]
+        );
 
-        $hr = Department::create([
-            'tenant_id' => $tenant->id,
-            'name'      => 'Human Resources',
-            'code'      => 'HR',
-            'is_active' => true,
-        ]);
+        $hr = Department::firstOrCreate(
+            ['tenant_id' => $tenant->id, 'code' => 'HR'],
+            ['name' => 'Human Resources', 'is_active' => true]
+        );
 
-        $finance = Department::create([
-            'tenant_id' => $tenant->id,
-            'name'      => 'Finance',
-            'code'      => 'FIN',
-            'is_active' => true,
-        ]);
+        $finance = Department::firstOrCreate(
+            ['tenant_id' => $tenant->id, 'code' => 'FIN'],
+            ['name' => 'Finance', 'is_active' => true]
+        );
 
-        $marketing = Department::create([
-            'tenant_id' => $tenant->id,
-            'name'      => 'Marketing',
-            'code'      => 'MKT',
-            'is_active' => true,
-        ]);
+        $marketing = Department::firstOrCreate(
+            ['tenant_id' => $tenant->id, 'code' => 'MKT'],
+            ['name' => 'Marketing', 'is_active' => true]
+        );
 
-        $operations = Department::create([
-            'tenant_id' => $tenant->id,
-            'name'      => 'Operations',
-            'code'      => 'OPS',
-            'is_active' => true,
-        ]);
+        $operations = Department::firstOrCreate(
+            ['tenant_id' => $tenant->id, 'code' => 'OPS'],
+            ['name' => 'Operations', 'is_active' => true]
+        );
 
         // ============================================================
         // Sample Job Positions
@@ -133,7 +141,10 @@ class SampleTenantSeeder extends Seeder
         ];
 
         foreach ($positions as $pos) {
-            JobPosition::create($pos);
+            JobPosition::firstOrCreate(
+                ['tenant_id' => $pos['tenant_id'], 'title' => $pos['title']],
+                collect($pos)->except(['tenant_id', 'title'])->toArray()
+            );
         }
     }
 }

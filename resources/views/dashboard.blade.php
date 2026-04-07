@@ -36,15 +36,15 @@
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 @php
                     $quickActions = [
-                        ['label' => 'Tambah Karyawan', 'icon' => '<path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><line x1="19" x2="19" y1="8" y2="14"/><line x1="22" x2="16" y1="11" y2="11"/>', 'color' => '#2B5BA8'],
-                        ['label' => 'Buat Pengumuman', 'icon' => '<path d="m3 11 18-5v12L3 13v-2z"/><path d="M11.6 16.8a3 3 0 1 1-5.8-1.6"/>', 'color' => '#F59E0B'],
-                        ['label' => 'Proses Payroll', 'icon' => '<rect width="20" height="14" x="2" y="5" rx="2"/><path d="M2 10h20"/><path d="M16 14h2"/>', 'color' => '#16A34A'],
-                        ['label' => 'Buka Lowongan', 'icon' => '<rect width="20" height="14" x="2" y="7" rx="2" ry="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/>', 'color' => '#8B5CF6'],
+                        ['label' => 'Tambah Karyawan', 'route' => 'employees.index', 'icon' => '<path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><line x1="19" x2="19" y1="8" y2="14"/><line x1="22" x2="16" y1="11" y2="11"/>', 'color' => '#2B5BA8'],
+                        ['label' => 'Buat Pengumuman', 'route' => 'engagement.announcements', 'icon' => '<path d="m3 11 18-5v12L3 13v-2z"/><path d="M11.6 16.8a3 3 0 1 1-5.8-1.6"/>', 'color' => '#F59E0B'],
+                        ['label' => 'Proses Payroll', 'route' => 'payroll.index', 'icon' => '<rect width="20" height="14" x="2" y="5" rx="2"/><path d="M2 10h20"/><path d="M16 14h2"/>', 'color' => '#16A34A'],
+                        ['label' => 'Buka Lowongan', 'route' => 'recruitment.postings', 'icon' => '<rect width="20" height="14" x="2" y="7" rx="2" ry="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/>', 'color' => '#8B5CF6'],
                     ];
                 @endphp
 
                 @foreach ($quickActions as $action)
-                    <a href="#" class="flex items-center gap-3 p-4 rounded-xl border border-slate-100 no-underline transition-all duration-200 bg-white hover:-translate-y-px hover:shadow-md">
+                    <a href="{{ route($action['route']) }}" class="flex items-center gap-3 p-4 rounded-xl border border-slate-100 no-underline transition-all duration-200 bg-white hover:-translate-y-px hover:shadow-md">
                         <div
                             class="w-10 h-10 rounded-[10px] flex items-center justify-center shrink-0"
                             style="background: {{ $action['color'] }}15;"
@@ -62,15 +62,7 @@
         {{-- Recent Activity --}}
         <x-ui.card title="Aktivitas Terbaru">
             <div class="flex flex-col gap-4">
-                @php
-                    $activities = [
-                        ['text' => 'Sistem dimulai — Selamat datang!', 'time' => 'Baru saja', 'icon' => '🚀'],
-                        ['text' => 'Database berhasil di-seed', 'time' => 'Baru saja', 'icon' => '🗃️'],
-                        ['text' => 'Konfigurasi selesai', 'time' => 'Baru saja', 'icon' => '⚙️'],
-                    ];
-                @endphp
-
-                @foreach ($activities as $activity)
+                @foreach ($recentActivities as $activity)
                     <div class="flex items-start gap-3">
                         <div class="w-9 h-9 rounded-[10px] bg-slate-50 flex items-center justify-center text-base shrink-0">
                             {{ $activity['icon'] }}
@@ -87,7 +79,7 @@
                 @endforeach
 
                 <div class="text-center pt-1">
-                    <a href="#" class="text-[13px] text-brand no-underline font-medium">
+                    <a href="{{ route('settings.audit-log') }}" class="text-[13px] text-brand no-underline font-medium">
                         Lihat semua →
                     </a>
                 </div>

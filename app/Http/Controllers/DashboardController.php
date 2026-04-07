@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class DashboardController extends Controller
 {
@@ -16,15 +17,17 @@ class DashboardController extends Controller
         // Platform admin dashboard
         if ($user->isPlatformUser()) {
             return view('dashboard', [
-                'pageTitle'  => 'Platform Dashboard',
-                'stats'      => $this->getPlatformStats(),
+                'pageTitle'        => 'Platform Dashboard',
+                'stats'            => $this->getPlatformStats(),
+                'recentActivities' => $this->getRecentActivities(null),
             ]);
         }
 
         // Tenant dashboard
         return view('dashboard', [
-            'pageTitle'  => 'Dashboard',
-            'stats'      => $this->getTenantStats($user->tenant_id),
+            'pageTitle'        => 'Dashboard',
+            'stats'            => $this->getTenantStats($user->tenant_id),
+            'recentActivities' => $this->getRecentActivities($user->tenant_id),
         ]);
     }
 
@@ -98,5 +101,46 @@ class DashboardController extends Controller
                 'color' => 'info',
             ],
         ];
+    }
+
+    /**
+     * Get recent audit log activities.
+     */
+    private function getRecentActivities(?int $tenantId): array
+    {
+        $query = DB::table('audit_logs')
+            ->select('action', 'model_type', 'model_id', 'created_at')
+            ->orderByDesc('created_at')
+            ->limit(10);
+
+        if ($tenantId) {
+            $query->where('tenant_id', $tenantId);
+        }
+
+        $logs = $query->get();
+
+        if ($logs->isEmpty()) {
+            return [
+                ['text' => 'Sistem dimulai — Selamat datang!', 'time' => 'Baru saja', 'icon' => '🚀'],
+                ['text' => 'Database berhasil di-seed', 'time' => 'Baru saja', 'icon' => '🗃️'],
+                ['text' => 'Konfigurasi selesai', 'time' => 'Baru saja', 'icon' => '⚙️'],
+            ];
+        }
+
+        $icons = [
+            'created' => '✅', 'updated' => '✏️', 'deleted' => '🗑️',
+            'login' => '🔑', 'approved' => '👍', 'rejected' => '❌',
+        ];
+
+        $actionLabels = [
+            'created' => 'Ditambahkan', 'updated' => 'Diperbarui', 'deleted' => 'Dihapus',
+            'login' => 'Login', 'approved' => 'Disetujui', 'rejected' => 'Ditolak',
+        ];
+
+        return $logs->map(fn ($log) => [
+            'text' => ($actionLabels[$log->action] ?? ucfirst($log->action)) . ' — ' . class_basename($log->model_type ?? ''),
+            'time' => \Carbon\Carbon::parse($log->created_at)->diffForHumans(),
+            'icon' => $icons[$log->action] ?? '📋',
+        ])->toArray();
     }
 }

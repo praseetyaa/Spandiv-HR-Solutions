@@ -10,39 +10,48 @@
         [
             'label' => 'KARYAWAN',
             'items' => [
-                ['label' => 'Data Karyawan', 'route' => 'dashboard', 'icon' => 'users'],
-                ['label' => 'Departemen', 'route' => 'dashboard', 'icon' => 'grid'],
-                ['label' => 'Jabatan', 'route' => 'dashboard', 'icon' => 'briefcase'],
+                ['label' => 'Data Karyawan', 'route' => 'employees.index', 'icon' => 'users'],
+                ['label' => 'Departemen', 'route' => 'employees.departments', 'icon' => 'grid'],
+                ['label' => 'Jabatan', 'route' => 'employees.positions', 'icon' => 'briefcase'],
             ],
         ],
         [
             'label' => 'KEHADIRAN',
             'items' => [
-                ['label' => 'Absensi', 'route' => 'dashboard', 'icon' => 'clock'],
-                ['label' => 'Cuti & Izin', 'route' => 'dashboard', 'icon' => 'calendar'],
-                ['label' => 'Lembur', 'route' => 'dashboard', 'icon' => 'timer'],
+                ['label' => 'Absensi', 'route' => 'attendance.index', 'icon' => 'clock'],
+                ['label' => 'Cuti & Izin', 'route' => 'attendance.leave', 'icon' => 'calendar'],
+                ['label' => 'Lembur', 'route' => 'attendance.overtime', 'icon' => 'timer'],
             ],
         ],
         [
             'label' => 'PAYROLL',
             'items' => [
-                ['label' => 'Penggajian', 'route' => 'dashboard', 'icon' => 'wallet'],
-                ['label' => 'Komponen Gaji', 'route' => 'dashboard', 'icon' => 'sliders'],
-                ['label' => 'Bonus', 'route' => 'dashboard', 'icon' => 'gift'],
+                ['label' => 'Penggajian', 'route' => 'payroll.index', 'icon' => 'wallet'],
+                ['label' => 'Komponen Gaji', 'route' => 'payroll.components', 'icon' => 'sliders'],
+                ['label' => 'Bonus', 'route' => 'payroll.bonus', 'icon' => 'gift'],
             ],
         ],
         [
             'label' => 'REKRUTMEN',
             'items' => [
-                ['label' => 'Lowongan', 'route' => 'dashboard', 'icon' => 'megaphone'],
-                ['label' => 'Kandidat', 'route' => 'dashboard', 'icon' => 'user-plus'],
-                ['label' => 'Tes Psikologi', 'route' => 'dashboard', 'icon' => 'brain'],
+                ['label' => 'Lowongan', 'route' => 'recruitment.postings', 'icon' => 'megaphone'],
+                ['label' => 'Kandidat', 'route' => 'recruitment.candidates', 'icon' => 'user-plus'],
+                ['label' => 'Onboarding', 'route' => 'recruitment.onboarding', 'icon' => 'briefcase'],
+            ],
+        ],
+        [
+            'label' => 'TES PSIKOLOGI',
+            'items' => [
+                ['label' => 'Bank Tes', 'route' => 'psych-test.tests', 'icon' => 'brain'],
+                ['label' => 'Penugasan', 'route' => 'psych-test.assignments', 'icon' => 'clipboard'],
+                ['label' => 'Hasil Tes', 'route' => 'psych-test.results', 'icon' => 'chart'],
             ],
         ],
         [
             'label' => 'PENGEMBANGAN',
             'items' => [
-                ['label' => 'Performa', 'route' => 'dashboard', 'icon' => 'chart'],
+                ['label' => 'Performa', 'route' => 'performance.cycles', 'icon' => 'chart'],
+                ['label' => 'Goal / KPI', 'route' => 'performance.goals', 'icon' => 'target'],
                 ['label' => 'Talent 9-Box', 'route' => 'talent.nine-box', 'icon' => 'star'],
                 ['label' => 'IDP', 'route' => 'idp.index', 'icon' => 'book'],
                 ['label' => 'Kursus', 'route' => 'learning.courses', 'icon' => 'book'],
@@ -74,6 +83,15 @@
                 ['label' => 'Pengumuman', 'route' => 'engagement.announcements', 'icon' => 'bell'],
             ],
         ],
+        [
+            'label' => 'PENGATURAN',
+            'items' => [
+                ['label' => 'Umum', 'route' => 'settings.general', 'icon' => 'settings'],
+                ['label' => 'Notifikasi', 'route' => 'settings.notifications', 'icon' => 'bell'],
+                ['label' => 'Audit Log', 'route' => 'settings.audit-log', 'icon' => 'search'],
+                ['label' => 'API', 'route' => 'settings.api', 'icon' => 'key'],
+            ],
+        ],
     ];
 
     $icons = [
@@ -96,6 +114,11 @@
         'heart' => '<path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/>',
         'shield' => '<path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>',
         'bell' => '<path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/>',
+        'target' => '<circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/>',
+        'settings' => '<circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9c.26.604.852.997 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/>',
+        'search' => '<circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/>',
+        'clipboard' => '<path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><rect width="8" height="4" x="8" y="2" rx="1" ry="1"/>',
+        'key' => '<path d="M21 2l-2 2m-7.61 7.61a5.5 5.5 0 1 1-7.778 7.778 5.5 5.5 0 0 1 7.777-7.777zm0 0L15.5 7.5m0 0l3 3L22 7l-3-3m-3.5 3.5L19 4"/>',
     ];
 @endphp
 

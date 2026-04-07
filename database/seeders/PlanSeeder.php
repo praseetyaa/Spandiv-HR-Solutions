@@ -72,7 +72,10 @@ class PlanSeeder extends Seeder
         ];
 
         foreach ($plans as $plan) {
-            Plan::create($plan);
+            Plan::firstOrCreate(
+                ['slug' => $plan['slug']],
+                collect($plan)->except('slug')->toArray()
+            );
         }
     }
 }
