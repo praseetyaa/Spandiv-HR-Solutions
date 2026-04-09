@@ -14,6 +14,7 @@ use App\Livewire\Settings\NotificationManager;
 use App\Livewire\Settings\AuditLogViewer;
 use App\Livewire\Settings\TenantSettingsManager;
 use App\Livewire\Settings\ApiTokenManager;
+use App\Livewire\Settings\UserProfile;
 use App\Livewire\Learning\CourseCatalog;
 use App\Livewire\Learning\TrainingManager;
 use App\Livewire\Learning\CertificationTracker;
@@ -161,6 +162,7 @@ Route::middleware(['auth', 'tenant', 'subscription'])->group(function () {
         Route::get('/audit-log', AuditLogViewer::class)->name('audit-log');
         Route::get('/general', TenantSettingsManager::class)->name('general');
         Route::get('/api', ApiTokenManager::class)->name('api');
+        Route::get('/profile', UserProfile::class)->name('profile');
     });
 });
 

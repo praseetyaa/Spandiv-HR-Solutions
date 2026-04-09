@@ -2,6 +2,7 @@
 
 namespace App\Livewire\Settings;
 
+use App\Models\Tenant;
 use App\Models\TenantSetting;
 use Livewire\Component;
 
@@ -31,48 +32,41 @@ class TenantSettingsManager extends Component
     protected function loadSettings(): void
     {
         $tenantId = auth()->user()->tenant_id;
-        $settings = TenantSetting::where('tenant_id', $tenantId)->pluck('value', 'key');
+        $setting = TenantSetting::where('tenant_id', $tenantId)->first();
+        $tenant = Tenant::find($tenantId);
 
-        $this->companyName = $settings->get('company_name', '');
-        $this->companyEmail = $settings->get('company_email', '');
-        $this->companyPhone = $settings->get('company_phone', '');
-        $this->companyAddress = $settings->get('company_address', '');
-        $this->timezone = $settings->get('timezone', 'Asia/Jakarta');
-        $this->locale = $settings->get('locale', 'id');
-        $this->dateFormat = $settings->get('date_format', 'd/m/Y');
-        $this->currency = $settings->get('currency', 'IDR');
-        $this->featureRecruitment = $settings->get('feature_recruitment', '1') === '1';
-        $this->featurePsychTest = $settings->get('feature_psych_test', '1') === '1';
-        $this->featurePayroll = $settings->get('feature_payroll', '1') === '1';
-        $this->featureLearning = $settings->get('feature_learning', '1') === '1';
-        $this->featureEngagement = $settings->get('feature_engagement', '1') === '1';
+        $this->companyName = $tenant->name ?? '';
+        $this->companyEmail = $setting->company_email ?? '';
+        $this->companyPhone = $setting->company_phone ?? '';
+        $this->companyAddress = $setting->company_address ?? '';
+        $this->timezone = $setting->timezone ?? 'Asia/Jakarta';
+        $this->locale = $setting->language ?? 'id';
+        $this->dateFormat = $setting->date_format ?? 'd/m/Y';
+        $this->currency = $setting->currency ?? 'IDR';
+
+        // Feature toggles are not columns in the current table,
+        // so keep defaults for now.
     }
 
     public function saveSettings(): void
     {
         $tenantId = auth()->user()->tenant_id;
-        $settings = [
-            'company_name'       => $this->companyName,
-            'company_email'      => $this->companyEmail,
-            'company_phone'      => $this->companyPhone,
-            'company_address'    => $this->companyAddress,
-            'timezone'           => $this->timezone,
-            'locale'             => $this->locale,
-            'date_format'        => $this->dateFormat,
-            'currency'           => $this->currency,
-            'feature_recruitment' => $this->featureRecruitment ? '1' : '0',
-            'feature_psych_test'  => $this->featurePsychTest ? '1' : '0',
-            'feature_payroll'     => $this->featurePayroll ? '1' : '0',
-            'feature_learning'    => $this->featureLearning ? '1' : '0',
-            'feature_engagement'  => $this->featureEngagement ? '1' : '0',
-        ];
 
-        foreach ($settings as $key => $value) {
-            TenantSetting::updateOrCreate(
-                ['tenant_id' => $tenantId, 'key' => $key],
-                ['value' => $value]
-            );
-        }
+        TenantSetting::updateOrCreate(
+            ['tenant_id' => $tenantId],
+            [
+                'company_email'   => $this->companyEmail,
+                'company_phone'   => $this->companyPhone,
+                'company_address' => $this->companyAddress,
+                'timezone'        => $this->timezone,
+                'language'        => $this->locale,
+                'date_format'     => $this->dateFormat,
+                'currency'        => $this->currency,
+            ]
+        );
+
+        // Update tenant name
+        Tenant::where('id', $tenantId)->update(['name' => $this->companyName]);
 
         session()->flash('success', 'Pengaturan berhasil disimpan!');
     }
@@ -83,3 +77,4 @@ class TenantSettingsManager extends Component
             ->layout('layouts.app', ['pageTitle' => 'Pengaturan']);
     }
 }
+
